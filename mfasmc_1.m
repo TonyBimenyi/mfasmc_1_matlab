@@ -207,7 +207,7 @@ xlabel('Time step', 'FontSize', 14);
 ylabel('Output', 'FontSize', 14);
 legend('FontSize', 14);
 xlim([0 L]);
-grid on;
+grid off;
 set(gca, 'FontSize', 12);
 title('Tracking Performance', 'FontSize', 15, 'FontWeight', 'bold');
 
@@ -220,7 +220,7 @@ xlabel('Time step', 'FontSize', 14);
 ylabel('Output', 'FontSize', 14);
 legend('FontSize', 14);
 xlim([0 L]);
-grid on;
+grid off;
 set(gca, 'FontSize', 12);
 title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
 
