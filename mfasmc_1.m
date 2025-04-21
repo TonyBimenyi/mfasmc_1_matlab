@@ -6,7 +6,7 @@ eta = 1;          % Increase to make the adaptive update faster
 lamda = 350;         % Model-free parameter
 mu = 0.005;           % Adaptive parameter
 epsilon = 1e-5;      % Small threshold for stability
-alpha = 50;           % Smoothing factor for error dynamics
+alpha = 15;           % Smoothing factor for error dynamics
 T = 0.1;             % Sampling time
 gamma1 = 0.45;        % Adjust control gains for faster tracking
 gamma2 = 0.15;        % Adjust control gains
@@ -58,13 +58,14 @@ for k = 1:1:m+1
 
 end
 
+
 for k = 1:m
     % Adaptive Gain update
     if k == 1
-        phi1(k) = 1.0; 
-        phi2(k) = 1.0; 
-        phi3(k) = 1.0; 
-        phi4(k) = 1.0;
+        phi1(k) = 4.0; 
+        phi2(k) = 4.0; 
+        phi3(k) = 4.0; 
+        phi4(k) = 4.0;
     elseif k == 2
         phi1(k) = phi1(k-1) + (eta * u1(k-1) / (mu + u1(k-1)^2)) * (y1(k) - phi1(k-1)*u1(k-1));
         phi2(k) = phi2(k-1) + (eta * u2(k-1) / (mu + u2(k-1)^2)) * (y2(k) - phi2(k-1)*u2(k-1));
@@ -155,10 +156,10 @@ for k = 1:m
 
     % Control signal
     if k == 1
-        u1(k) = 0;
-        u2(k) = 0;
-        u3(k) = 0;
-        u4(k) = 0;
+        u1(k) = 0.01;
+        u2(k) = 0.01;
+        u3(k) = 0.01;
+        u4(k) = 0.01;
     else
         u1(k) = mfa1(k) + gamma1 * sm1(k);
         u2(k) = mfa2(k) + gamma2 * sm2(k);
@@ -166,10 +167,10 @@ for k = 1:m
         u4(k) = mfa4(k) + gamma4 * sm4(k);
     end
     if k == 1%0
-        y1(k)=0.15;
-        y2(k)=0.1;
-        y3(k)=0.15;
-        y4(k)=0.1;
+        y1(k)=0.6;
+        y2(k)=0.6;
+        y3(k)=0.6;
+        y4(k)=0.6;
 
     end
 
@@ -179,29 +180,37 @@ for k = 1:m
     % Plant model update with nonlinear term and feedforward
     a = 0.5;
     b1 = 1.2 * n / (rT * 0.2);
-    b2 = 1.1 * n / (rT * 0.2);
-    nonlinearity1 = 0.02; % Coefficient for cubic nonlinearity
+    b2 = 1.2 * n / (rT * 0.2);
+    b3 = 1.2 * n / (rT * 0.2);
+    b4 = 1.2 * n / (rT * 0.2);
+    
+    nonlinearity1 = 0.03; % Coefficient for cubic nonlinearity
     nonlinearity2 = 0.01; % Coefficient for cubic nonlinearity
     nonlinearity3 = 0.02; % Coefficient for cubic nonlinearity
     nonlinearity4 = 0.01; % Coefficient for cubic nonlinearity
-    ff_gain = 0.1; % Feedforward gain
+    ff_gain = 0.45; % Feedforward gain
     
   
 
     % Add cubic nonlinearity and feedforward term
-    y1(k+1) = a * y1(k) + b1 * u1(k)- nonlinearity1 * y1(k)^2 + ff_gain ;
+    y1(k+1) = a * y1(k) + b1 * u1(k)- nonlinearity1 * y1(k)^3 + ff_gain ;
     y2(k+1) = a * y2(k) + b2 * u2(k) - nonlinearity2 * y2(k)^2+ ff_gain ;
-    y3(k+1) = a * y3(k) + b1 * u3(k)- nonlinearity3 * y3(k)^2+ ff_gain;
-    y4(k+1) = a * y4(k) + b2 * u4(k)- nonlinearity4 * y4(k)^2 + ff_gain ;
+    y3(k+1) = a * y3(k) + b3 * u3(k)- nonlinearity3 * y3(k)^3+ ff_gain;
+    y4(k+1) = a * y4(k) + b4 * u4(k)- nonlinearity4 * y4(k)^2 + ff_gain ;
 
+    % % Add cubic nonlinearity and feedforward term
+    % y1(k+1) = y1(k) * u1(k) / 1 + y1(k)^2 + u1(k);
+    % y2(k+1) = y2(k) * u2(k) / 1 + y2(k)^3 + u2(k) + 0.5 * u2(k);
+    % y3(k+1) = y3(k) * u3(k) / 1 + y3(k)^2 + u3(k) + 0.9 * u3(k);
+    % y4(k+1) = y4(k) * u4(k) / 1 + y4(k)^3 + u4(k) + 0.8 * u4(k); 
 end
 
 % Plotting
 figure;
 plot(yd(1:end-1), '-b', 'DisplayName', 'y_d', 'LineWidth', 2); hold on;
-plot(y1(1:end-1), '--*', 'DisplayName', 'y_1', 'LineWidth', 2);
-plot(y2(1:end-1), '-.b', 'DisplayName', 'y_2', 'LineWidth', 2);
-plot(y3(1:end-1), '-.ok', 'DisplayName', 'y_3', 'LineWidth', 2);
+plot(y1(1:end-1), '--', 'DisplayName', 'y_1', 'LineWidth', 2);
+plot(y2(1:end-1), '-.m', 'DisplayName', 'y_2', 'LineWidth', 2);
+plot(y3(1:end-1), '-.k', 'DisplayName', 'y_3', 'LineWidth', 2);
 plot(y4(1:end-1), '-.g', 'DisplayName', 'y_4', 'LineWidth', 2);
 xlabel('Time step', 'FontSize', 14);
 ylabel('Output', 'FontSize', 14);
@@ -211,17 +220,17 @@ grid off;
 set(gca, 'FontSize', 12);
 title('Tracking Performance', 'FontSize', 15, 'FontWeight', 'bold');
 
-figure
-plot(xi1(1:end-1), '--*', 'DisplayName', '\xi_1', 'LineWidth', 2);hold on;
-plot(xi2(1:end-1), '-.b', 'DisplayName', '\xi_2', 'LineWidth', 2);
-plot(xi3(1:end-1), '-.ok', 'DisplayName', '\xi_3', 'LineWidth', 2);
-plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2);
-xlabel('Time step', 'FontSize', 14);
-ylabel('Output', 'FontSize', 14);
-legend('FontSize', 14);
-xlim([0 L]);
-grid off;
-set(gca, 'FontSize', 12);
-title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
+% figure
+% plot(xi1(1:end-1), '--', 'DisplayName', '\xi_1', 'LineWidth', 2);hold on;
+% plot(xi2(1:end-1), '-.b', 'DisplayName', '\xi_2', 'LineWidth', 2);
+% plot(xi3(1:end-1), '-.k', 'DisplayName', '\xi_3', 'LineWidth', 2);
+% plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2);
+% xlabel('Time step', 'FontSize', 14);
+% ylabel('Output', 'FontSize', 14);
+% legend('FontSize', 14);
+% xlim([0 L]);
+% grid off;
+% set(gca, 'FontSize', 12);
+% title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
 
 
