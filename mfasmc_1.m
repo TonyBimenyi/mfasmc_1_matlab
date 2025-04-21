@@ -1,7 +1,7 @@
 clc; clear;
 
 % Parameters
-rho =8;            % Increase gain for better control response
+rho =7.5;            % Increase gain for better control response
 eta = 1;          % Increase to make the adaptive update faster
 lamda = 350;         % Model-free parameter
 mu = 0.005;           % Adaptive parameter
@@ -207,11 +207,11 @@ end
 
 % Plotting
 figure;
-plot(yd(1:end-1), '-b', 'DisplayName', 'y_d', 'LineWidth', 2); hold on;
-plot(y1(1:end-1), '--', 'DisplayName', 'y_1', 'LineWidth', 2);
-plot(y2(1:end-1), '-.m', 'DisplayName', 'y_2', 'LineWidth', 2);
-plot(y3(1:end-1), '-.k', 'DisplayName', 'y_3', 'LineWidth', 2);
-plot(y4(1:end-1), '-.g', 'DisplayName', 'y_4', 'LineWidth', 2);
+plot(yd(1:end-1), '-b', 'DisplayName', 'y_d', 'LineWidth', 1); hold on;
+plot(y1(1:end-1), '--', 'DisplayName', 'y_1', 'LineWidth', 1);
+plot(y2(1:end-1), '-m', 'DisplayName', 'y_2', 'LineWidth', 1);
+plot(y3(1:end-1), '-.ok', 'DisplayName', 'y_3', 'LineWidth', 1);
+plot(y4(1:end-1), '-og', 'DisplayName', 'y_4', 'LineWidth', 1);
 xlabel('Time step', 'FontSize', 14);
 ylabel('Output', 'FontSize', 14);
 legend('FontSize', 14);
@@ -220,17 +220,18 @@ grid off;
 set(gca, 'FontSize', 12);
 title('Tracking Performance', 'FontSize', 15, 'FontWeight', 'bold');
 
-% figure
-% plot(xi1(1:end-1), '--', 'DisplayName', '\xi_1', 'LineWidth', 2);hold on;
-% plot(xi2(1:end-1), '-.b', 'DisplayName', '\xi_2', 'LineWidth', 2);
-% plot(xi3(1:end-1), '-.k', 'DisplayName', '\xi_3', 'LineWidth', 2);
-% plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2);
-% xlabel('Time step', 'FontSize', 14);
-% ylabel('Output', 'FontSize', 14);
-% legend('FontSize', 14);
-% xlim([0 L]);
-% grid off;
-% set(gca, 'FontSize', 12);
-% title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
+figure
+plot(xi1(1:end-1), '--', 'DisplayName', '\xi_1', 'LineWidth', 2);hold on;
+plot(xi2(1:end-1), '-.b', 'DisplayName', '\xi_2', 'LineWidth', 2);
+plot(xi3(1:end-1), '-.k', 'DisplayName', '\xi_3', 'LineWidth', 2);
+plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2);
+xlabel('Time step', 'FontSize', 14);
+ylabel('Output', 'FontSize', 14);
+legend('FontSize', 14);
+xlim([0 L]);
+xlim([0 L]);
+grid off;
+set(gca, 'FontSize', 12);
+title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
 
 
