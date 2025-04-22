@@ -54,8 +54,7 @@ yd = zeros(m+1,1);
 
 % Desired signal (Reference trajectory)
 for k = 1:1:m+1
-    yd(k) = 0.6 * sin(0.05 * pi * k) + 0.6 * cos(0.03 * pi * k);
-
+    yd(k) = 0.6; % Time-invariant constant reference signal
 end
 
 
@@ -206,32 +205,33 @@ for k = 1:m
 end
 
 % Plotting
-figure;
-plot(yd(1:end-1), '-b', 'DisplayName', 'y_d', 'LineWidth', 1); hold on;
-plot(y1(1:end-1), '--', 'DisplayName', 'y_1', 'LineWidth', 1);
-plot(y2(1:end-1), '-m', 'DisplayName', 'y_2', 'LineWidth', 1);
-plot(y3(1:end-1), '-.ok', 'DisplayName', 'y_3', 'LineWidth', 1);
-plot(y4(1:end-1), '-og', 'DisplayName', 'y_4', 'LineWidth', 1);
+figure('Position', [100, 100, 10*100, 5.5*100]); % [left, bottom, width, height] in pixels
+plot(yd(1:end-1), '-b', 'DisplayName', 'y_d', 'LineWidth', 2.5); hold on;
+plot(y1(1:end-1), '--', 'DisplayName', 'y_1', 'LineWidth', 2.5);
+plot(y2(1:end-1), '-.m', 'DisplayName', 'y_2', 'LineWidth', 2.5);
+plot(y3(1:end-1), '-.k', 'DisplayName', 'y_3', 'LineWidth', 2.5);
+plot(y4(1:end-1), '--g', 'DisplayName', 'y_4', 'LineWidth', 2.5);
 xlabel('Time step', 'FontSize', 14);
-ylabel('Output', 'FontSize', 14);
+ylabel('Tracking performance', 'FontSize', 14);
 legend('FontSize', 14);
 xlim([0 L]);
 grid off;
 set(gca, 'FontSize', 12);
-title('Tracking Performance', 'FontSize', 15, 'FontWeight', 'bold');
+% title('Tracking Performance', 'FontSize', 15, 'FontWeight', 'bold');
 
-figure
-plot(xi1(1:end-1), '--', 'DisplayName', '\xi_1', 'LineWidth', 2);hold on;
-plot(xi2(1:end-1), '-.b', 'DisplayName', '\xi_2', 'LineWidth', 2);
-plot(xi3(1:end-1), '-.k', 'DisplayName', '\xi_3', 'LineWidth', 2);
-plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2);
+% Create a figure and set its size (width: 10 inches, height: 2.5 inches)
+figure('Position', [100, 100, 10*100, 2.5*100]); % [left, bottom, width, height] in pixels
+plot(xi1(1:end-1), '--', 'DisplayName', '\xi_1', 'LineWidth', 2.5);hold on;
+plot(xi2(1:end-1), '-.m', 'DisplayName', '\xi_2', 'LineWidth', 2.5);
+plot(xi3(1:end-1), '-.k', 'DisplayName', '\xi_3', 'LineWidth', 2.5);
+plot(xi4(1:end-1), '-.g', 'DisplayName', '\xi_4', 'LineWidth', 2.5);
 xlabel('Time step', 'FontSize', 14);
-ylabel('Output', 'FontSize', 14);
+ylabel('Distributed error', 'FontSize', 14);
 legend('FontSize', 14);
 xlim([0 L]);
-xlim([0 L]);
+ylim([-0.2 0.2]);
 grid off;
 set(gca, 'FontSize', 12);
-title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
+% title('Distributed Errors', 'FontSize', 15, 'FontWeight', 'bold');
 
 
